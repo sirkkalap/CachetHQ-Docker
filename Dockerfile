@@ -9,6 +9,7 @@ ENV cachet_ver v2.3.9
 RUN DEBIAN_FRONTEND=noninteractive \
     echo "APT::Install-Recommends \"0\";" >> /etc/apt/apt.conf.d/02recommends && \
     echo "APT::Install-Suggests \"0\";" >> /etc/apt/apt.conf.d/02recommends && \
+    mkdir -p /var/cache/apt/archives/partial && \
     apt-get clean && \
     apt-get -q -y update && \
     apt-get -q -y install \
@@ -43,7 +44,7 @@ USER www-data
 
 # Install composer
 RUN php -r "copy('https://getcomposer.org/installer', '/tmp/composer-setup.php');" && \
-    php -r "copy('https://composer.github.io/installer.sig', '/tmp/composer-setup.sig');" && \ 
+    php -r "copy('https://composer.github.io/installer.sig', '/tmp/composer-setup.sig');" && \
     php -r "if (hash('SHA384', file_get_contents('/tmp/composer-setup.php')) !== trim(file_get_contents('/tmp/composer-setup.sig'))) { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); }" && \
     php /tmp/composer-setup.php --version=1.1.2 && \
     php -r "unlink('composer-setup.php');"
